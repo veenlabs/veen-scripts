@@ -1,4 +1,5 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -7,11 +8,11 @@ module.exports = {
     dashboard: './src/dashboard.js'
   },
   output: {
-    filename: '[name].bundle.js', // [name] will be replaced by entry point key (e.g. main, admin)
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
-  mode: 'production', // or development
+  mode: 'production',
   module: {
     rules: [
       {
@@ -20,5 +21,9 @@ module.exports = {
         use: 'babel-loader',
       },
     ],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
 };
