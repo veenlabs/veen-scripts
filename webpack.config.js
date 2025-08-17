@@ -1,9 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js', // adjust this to your entry point
+  entry: {
+    main: './src/index.js',
+    admin: './src/admin.js',
+    dashboard: './src/dashboard.js'
+  },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js', // [name] will be replaced by entry point key (e.g. main, admin)
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
@@ -13,7 +17,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: 'babel-loader', // if you're using Babel
+        use: 'babel-loader',
       },
     ],
   },
