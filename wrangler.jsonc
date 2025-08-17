@@ -1,7 +1,5 @@
 {
   "name": "veen-scripts",
   "compatibility_date": "2025-08-17",
-  "main": "./dist"
+   "pages_build_output_dir": "./dist"
 }
-
-// pages_build_output_dir = "./dist"
