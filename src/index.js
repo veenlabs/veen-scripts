@@ -129,6 +129,6 @@ function sanitizeAndParseArticle(html, fallbackImage) {
   if (window) {
     window.setArticleParseScriptAvailable?.(true)
     window.sanitizeAndParseArticle = sanitizeAndParseArticle
-    window.isImageInHtml = imageExistsInHtml
+    window.getParseScriptVersion = () => process.env.VERSION
   }
 })()

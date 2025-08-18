@@ -1,5 +1,7 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const packageJson = require('./package.json');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -24,4 +26,9 @@ module.exports = {
     minimize: true,
     minimizer: [new TerserPlugin()],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.VERSION': JSON.stringify(packageJson.version),
+    }),
+  ],
 };
