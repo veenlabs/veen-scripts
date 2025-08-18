@@ -3,16 +3,14 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: './src/index.js',
-    admin: './src/admin.js',
-    dashboard: './src/dashboard.js'
+    main: './src/index.js'
   },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
-  mode: 'production',
+  mode: 'production',// or development
   module: {
     rules: [
       {

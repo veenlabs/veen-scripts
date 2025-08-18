@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "lint:fix": "prettier --write \"src/**/*.{js,json,css,html}\""
   },
   "devDependencies": {
     "@babel/core": "^7.28.3",
@@ -12,6 +13,7 @@
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.4",
+    "prettier": "^3.2.5",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.14",
     "webpack": "^5.101.2",
@@ -20,6 +22,7 @@
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
-    "defuddle": "^0.6.6"
+    "defuddle": "^0.6.6",
+    "dompurify": "^3.2.6"
   }
 }
