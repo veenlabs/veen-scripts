@@ -52,7 +52,7 @@ function purifyHtml(html) {
 // Extract filename without noisy suffixes/extensions
 function cleanFilename(name) {
   if (!name) return ''
-  name = name.replace(/-\d{3,4}-\d{2,3}/, '') // strip resolution suffix
+  name = name.replace(/-\d{3,4}-\d{2,3}/, '')
   const parts = name.toLowerCase().split('.')
   return parts.length > 2 ? parts.slice(0, -1).join('.') : name.toLowerCase()
 }
@@ -97,30 +97,45 @@ function imageExistsInHtml(imageUrl, htmlContent) {
 
 /** ----------------- Core ----------------- */
 
-// Parse + sanitize article
-function sanitizeAndParseArticle(html, fallbackImage) {
+// Extract article content and choose main image
+// Default image has higher preference over extracted image
+function parseArticle(html, defaultImage) {
   const dom = parseDom(html)
-
   const readability = new Readability(dom).parse()
   const defuddle = new Defuddle(dom).parse()
 
   const content = readability?.content || ''
   const extractedImage = defuddle?.image || ''
-  const imageToUse = fallbackImage || extractedImage
+  const image = defaultImage || extractedImage
 
-  let doc = parseDom(content)
+  return { content, image }
+}
+
+// Sanitize article content (apply DOM transformations and detect duplicates)
+function sanitizeArticle(html, image) {
+  let doc = parseDom(html)
   doc = addLazyTags(doc)
   doc = transformAnchors(doc)
   doc = removeFirstTimeTag(doc)
 
   const sanitized = purifyHtml(doc.body.innerHTML)
-  const isDuplicateImage = imageExistsInHtml(imageToUse, sanitized)
+  const isDuplicateImage = imageExistsInHtml(image, sanitized)
 
   return {
     content: sanitized,
-    image: extractedImage,
+    image,
     isDuplicateImage,
   }
+}
+
+// Orchestration: parse then sanitize
+function sanitizeAndParseArticle(html = '', defaultImage) {
+  if (!html) {
+    return { content: '', image: defaultImage || '', isDuplicateImage: false }
+  }
+
+  const { content, image } = parseArticle(html, defaultImage)
+  return sanitizeArticle(content, image)
 }
 
 /** ----------------- Expose to Window ----------------- */
@@ -129,6 +144,8 @@ function sanitizeAndParseArticle(html, fallbackImage) {
   if (window) {
     window.setArticleParseScriptAvailable?.(true)
     window.sanitizeAndParseArticle = sanitizeAndParseArticle
+    window.sanitizeArticle = sanitizeArticle
+    window.isImageInHtml = imageExistsInHtml
     window.getParseScriptVersion = () => process.env.VERSION
   }
 })()
